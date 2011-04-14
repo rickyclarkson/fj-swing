@@ -1,10 +1,22 @@
 package fj.swing;
 
+import fj.Effect;
+import fj.F;
 import javax.swing.JButton;
 
 public class ButtonW {
     private final JButton wrapped;
-
+    public static final F<ButtonW, Effect<Boolean>> visibility = new F<ButtonW, Effect<Boolean>>() {
+        @Override
+        public Effect<Boolean> f(final ButtonW buttonW) {
+            return new Effect<Boolean>() {
+                @Override
+                public void e(Boolean b) {
+                    buttonW.wrapped.setVisible(b);
+                }
+            };
+        }
+    };
     public static ButtonW button(JButton wrapped) {
         return new ButtonW(wrapped);
     }
@@ -13,14 +25,16 @@ public class ButtonW {
         this.wrapped = wrapped;
     }
 
-    public ButtonW bindVisibility(ValueView<Boolean> valueView) {
-        wrapped.setVisible(valueView.get());
-        valueView.addListener(new Listener<Boolean>() {
+    public <A> ButtonW bind(final F<ButtonW, Effect<A>> effect, ValueView<A> view) {
+        effect.f(this).e(view.get());
+
+        view.addListener(new Listener<A>() {
             @Override
-            public void act(Boolean b) {
-                wrapped.setVisible(b);
+            public void act(A a) {
+                effect.f(ButtonW.this).e(a);
             }
         });
+
         return this;
     }
 

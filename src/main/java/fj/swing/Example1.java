@@ -34,7 +34,7 @@ public final class Example1 {
                 }
             }
         });
-        frame.getContentPane().add(ButtonW.button(new JButton("Well done")).bindVisibility(isANumber).unwrap());
+        frame.getContentPane().add(ButtonW.button(new JButton("Well done")).bind(ButtonW.visibility, isANumber).unwrap());
     }
 
     void start() {
