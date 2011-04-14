@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import static fj.swing.TextFieldW.textField;
+
 public class Example2 {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -47,9 +49,9 @@ public class Example2 {
                 }
             }
         };
-        frame.getContentPane().add(TextFieldW.textField(new JTextField()).bind(firstNumber.map(intToString, stringToInt, "3")).unwrap());
-        frame.getContentPane().add(TextFieldW.textField(new JTextField()).bind(secondNumber.map(intToString, stringToInt, "4")).unwrap());
-        frame.getContentPane().add(TextFieldW.textField(new JTextField()).bind(sum.map(intToString)).unwrap());
+        frame.getContentPane().add(textField(new JTextField()).bind(firstNumber.map(intToString, stringToInt, "3")).unwrap());
+        frame.getContentPane().add(textField(new JTextField()).bind(secondNumber.map(intToString, stringToInt, "4")).unwrap());
+        frame.getContentPane().add(textField(new JTextField()).bind(sum.map(intToString)).unwrap());
     }
 
     public void start() {
