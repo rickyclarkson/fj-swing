@@ -40,7 +40,7 @@ public class Example3 {
         }
 
         frame.getContentPane().add(questionPanel);
-        JTextArea email = TextAreaW.textArea(new JTextArea("Now you have proved you're not drunk,\nyou can send emails.")).bindVisibility(ValueView.all(correct)).unwrap();
+        JTextArea email = TextAreaW.textArea(new JTextArea("Now you have proved you're not drunk,\nyou can send emails.")).bind(TextAreaW.visibility, ValueView.all(correct)).unwrap();
         frame.getContentPane().add(email);
     }
 
