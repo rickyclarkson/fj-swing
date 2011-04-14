@@ -2,10 +2,12 @@ package fj.swing;
 
 import fj.F;
 import java.awt.GridLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+
+import static fj.swing.ButtonW.button;
+import static fj.swing.ButtonW.visibility;
 
 public final class Example1 {
     public static void main(String[] args) {
@@ -34,7 +36,7 @@ public final class Example1 {
                 }
             }
         });
-        frame.getContentPane().add(ButtonW.button(new JButton("Well done")).bind(ButtonW.visibility, isANumber).unwrap());
+        frame.getContentPane().add(button("Well done").bind(visibility, isANumber).unwrap());
     }
 
     void start() {

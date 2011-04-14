@@ -41,4 +41,8 @@ public class ButtonW {
     public JButton unwrap() {
         return wrapped;
     }
+
+    public static ButtonW button(String text) {
+        return button(new JButton(text));
+    }
 }

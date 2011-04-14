@@ -19,6 +19,6 @@ This creates a mutable value, 'text', and binds a JTextField to it.  Whenever th
 
 This creates a view of the first value, and that view reads as true when the original value (and hence, the text field) contains a value that can be parsed to an int.
 
-    frame.getContentPane().add(ButtonW.button(new JButton("Well done")).bind(ButtonW.visibility, isANumber).unwrap());
+    frame.getContentPane().add(button("Well done").bind(visibility, isANumber).unwrap());
 
 This creates a button that is only visible when isANumber reads as true.  A runnable version of this example can be found in Example1.java
