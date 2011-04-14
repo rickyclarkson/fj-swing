@@ -15,6 +15,18 @@ public final class TextFieldW {
         return new TextFieldW(wrapped);
     }
 
+    public TextFieldW bind(ValueView<String> value) {
+        wrapped.setText(value.get());
+        value.addListener(new Listener<String>() {
+            @Override
+            public void act(String s) {
+                wrapped.setText(s);
+            }
+        });
+
+        return this;
+    }
+    
     public TextFieldW bind(final Value<String> value) {
         wrapped.setText(value.get());
         final boolean[] recursionGuard = {false};

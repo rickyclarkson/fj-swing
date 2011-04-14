@@ -23,6 +23,11 @@
             <version>4.4</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.functionaljava</groupId>
+            <artifactId>fj</artifactId>
+            <version>3.0-RickyC-1</version>
+        </dependency>
     </dependencies>
 </project>
 

@@ -1,5 +1,8 @@
 package fj.swing;
 
+import fj.F;
+import fj.F2;
+import fj.data.Option;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,5 +26,84 @@ public final class Value<A> {
 
     public void addListener(Listener<A> listener) {
         listeners.add(listener);
+    }
+
+    public <B> ValueView<B> map(final F<A, B> f) {
+        return new ValueView<B>() {
+            @Override
+            public B get() {
+                return f.f(Value.this.get());
+            }
+
+            @Override
+            public void addListener(final Listener<B> listener) {
+                listeners.add(new Listener<A>() {
+                    @Override
+                    public void act(A a) {
+                        listener.act(f.f(a));
+                    }
+                });
+            }
+        };
+    }
+
+    public <B> Value<B> map(final F<A, B> aToB, final F<B, Option<A>> bToA, B defaultValue) {
+        final Value<B> result = new Value<B>(defaultValue);
+        final boolean[] recursionGuard = {false};
+
+        addListener(new Listener<A>() {
+            @Override
+            public void act(A a) {
+                if (!recursionGuard[0]) {
+                    recursionGuard[0] = true;
+                    try {
+                        result.set(aToB.f(a));
+                    } finally {
+                        recursionGuard[0] = false;
+                    }
+                }
+            }
+        });
+        result.addListener(new Listener<B>() {
+            @Override
+            public void act(B b) {
+                if (!recursionGuard[0]) {
+                    recursionGuard[0] = true;
+                    try {
+                        for (A a: bToA.f(b))
+                            set(a);
+                    } finally {
+                        recursionGuard[0] = false;
+                    }
+                }
+            }
+        });
+        return result;
+    }
+
+    public <B, C> ValueView<C> bind(final Value<B> other, final F2<A, B, C> f2) {
+        return new ValueView<C>() {
+            @Override
+            public C get() {
+                return f2.f(Value.this.get(), other.get());
+            }
+
+            @Override
+            public void addListener(final Listener<C> cListener) {
+                Value.this.addListener(new Listener<A>() {
+                    @Override
+                    public void act(A a) {
+                        cListener.act(f2.f(a, other.get()));
+                    }
+                });
+
+                other.addListener(new Listener<B>() {
+                    @Override
+                    public void act(B b) {
+                        cListener.act(f2.f(Value.this.get(), b));
+                    }
+                });
+            }
+        };
     }
 }
