@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class TextFieldTest {
+public final class TextFieldTest {
     @Test
     public void changeText() {
         final Value<String> value = new Value<String>("foo");
