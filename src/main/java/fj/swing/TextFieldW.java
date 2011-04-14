@@ -16,6 +16,7 @@ public final class TextFieldW {
     }
 
     public TextFieldW bind(final Value<String> value) {
+        wrapped.setText(value.get());
         final boolean[] recursionGuard = {false};
 
         wrapped.getDocument().addDocumentListener(new DocumentListener() {
@@ -55,5 +56,9 @@ public final class TextFieldW {
         });
 
         return this;
+    }
+
+    public JTextField unwrap() {
+        return wrapped;
     }
 }
