@@ -1,5 +1,6 @@
 package fj.swing;
 
+import fj.F;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -72,5 +73,34 @@ public final class TextFieldW {
 
     public JTextField unwrap() {
         return wrapped;
+    }
+
+    public <A> ValueView<A> map(final F<String, A> f) {
+        return new ValueView<A>() {
+            @Override
+            public A get() {
+                return f.f(wrapped.getText());
+            }
+
+            @Override
+            public void addListener(final Listener<A> aListener) {
+                wrapped.getDocument().addDocumentListener(new DocumentListener() {
+                    @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        changedUpdate(e);
+                    }
+
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        changedUpdate(e);
+                    }
+
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {
+                        aListener.act(f.f(wrapped.getText()));
+                    }
+                });
+            }
+        };
     }
 }

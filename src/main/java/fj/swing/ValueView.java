@@ -1,6 +1,7 @@
 package fj.swing;
 
 import fj.F;
+import java.util.List;
 
 public abstract class ValueView<B> {
     public abstract B get();
@@ -21,6 +22,30 @@ public abstract class ValueView<B> {
                         cListener.act(f.f(b));
                     }
                 });
+            }
+        };
+    }
+
+    public static ValueView<Boolean> all(final List<ValueView<Boolean>> valueViews) {
+        return new ValueView<Boolean>() {
+            @Override
+            public Boolean get() {
+                for (ValueView<Boolean> valueView: valueViews)
+                    if (!valueView.get())
+                        return false;
+
+                return true;
+            }
+
+            @Override
+            public void addListener(final Listener<Boolean> booleanListener) {
+                for (ValueView<Boolean> valueView: valueViews)
+                    valueView.addListener(new Listener<Boolean>() {
+                        @Override
+                        public void act(Boolean aBoolean) {
+                            booleanListener.act(get());
+                        }
+                    });
             }
         };
     }
