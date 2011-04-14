@@ -18,18 +18,6 @@ public class TextAreaW {
         }
     };
 
-    public static final F<TextAreaW, Effect<Boolean>> editability = new F<TextAreaW, Effect<Boolean>>() {
-        @Override
-        public Effect<Boolean> f(final TextAreaW textAreaW) {
-            return new Effect<Boolean>() {
-                @Override
-                public void e(Boolean b) {
-                    textAreaW.wrapped.setEditable(b);
-                }
-            };
-        }
-    };
-
     public TextAreaW(JTextArea wrapped) {
         this.wrapped = wrapped;
     }
@@ -53,5 +41,9 @@ public class TextAreaW {
 
     public JTextArea unwrap() {
         return wrapped;
+    }
+
+    public static TextAreaW textArea(String text) {
+        return textArea(new JTextArea(text));
     }
 }

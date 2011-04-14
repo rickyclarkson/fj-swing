@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
+import static fj.swing.TextAreaW.textArea;
+import static fj.swing.TextAreaW.visibility;
+import static fj.swing.ValueView.all;
+
 public class Example3 {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -40,7 +44,7 @@ public class Example3 {
         }
 
         frame.getContentPane().add(questionPanel);
-        JTextArea email = TextAreaW.textArea(new JTextArea("Now you have proved you're not drunk,\nyou can send emails.")).bind(TextAreaW.visibility, ValueView.all(correct)).unwrap();
+        JTextArea email = textArea("Now you have proved you're not drunk,\nyou can send emails.").bind(visibility, all(correct)).unwrap();
         frame.getContentPane().add(email);
     }
 
