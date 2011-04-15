@@ -1,9 +1,12 @@
 package fj.swing;
 
+import fj.F;
+import fj.F2;
 import javax.swing.JTextField;
 import org.junit.Before;
 import org.junit.Test;
 
+import static fj.swing.TextFieldW.textField;
 import static org.junit.Assert.assertEquals;
 
 public final class TextFieldTest {
@@ -13,7 +16,7 @@ public final class TextFieldTest {
     @Before
     public void setUp() {
         value = new Value<String>("foo");
-        field = TextFieldW.textField(new JTextField()).bind(value).unwrap();
+        field = textField(new JTextField()).bind(value).unwrap();
     }
 
     @Test
@@ -31,5 +34,50 @@ public final class TextFieldTest {
     @Test
     public void initialValue() {
         assertEquals("The textfield should be showing foo, as that is the value bound to it", "foo", field.getText());
+    }
+
+    @Test
+    public void binding() {
+        Value<String> surname = new Value<String>("spam");
+        ValueView<String> allName = value.bind(surname, new F2<String, String, String>() {
+            @Override
+            public String f(String s, String s1) {
+                return s + " " + s1;
+            }
+        });
+        assertEquals("The name should be foo spam", "foo spam", allName.get());
+        value.set("bar");
+        assertEquals("The name should be bar spam", "bar spam", allName.get());
+        surname.set("eggs");
+        assertEquals("The name should be bar eggs", "bar eggs", allName.get());
+    }
+
+    @Test
+    public void bindingToAValueView() {
+        ValueView<String> reverse = value.map(new F<String, String>() {
+            @Override
+            public String f(String s) {
+                return new StringBuilder(s).reverse().toString();
+            }
+        });
+        JTextField textField = textField(new JTextField()).bind(reverse).unwrap();
+        value.set("spam");
+        assertEquals("The textfield should contain the text 'maps'.", "maps", textField.getText());
+    }
+
+    @Test
+    public void mapping() {
+        value.set("5");
+
+        ValueView<Integer> intView = textField(field).map(new F<String, Integer>() {
+            @Override
+            public Integer f(String s) {
+                return Integer.parseInt(s);
+            }
+        });
+        
+        assertEquals("intView should contain 5", 5, (long)intView.get());
+        value.set("66");
+        assertEquals("intView should contain 66", 66, (long)intView.get());
     }
 }
