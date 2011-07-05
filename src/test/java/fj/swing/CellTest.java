@@ -1,5 +1,6 @@
 package fj.swing;
 
+import fj.Effect;
 import fj.P;
 import fj.P1;
 import org.junit.Test;
@@ -24,5 +25,20 @@ public class CellTest {
         });
 
         assertTrue(doubleA.get() == 10);
+    }
+
+    @Test
+    public void simpleAction() {
+        final Cell<Integer> a = new Cell<Integer>(P.p(5));
+        final StringBuilder b = new StringBuilder();
+        a.whenChanged(new Effect<Integer>() {
+            @Override
+            public void e(Integer integer) {
+                b.append("foo");
+            }
+        });
+
+        a.set(10);
+        assertTrue(b.toString().equals("foo"));
     }
 }
