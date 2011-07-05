@@ -41,4 +41,24 @@ public class CellTest {
         a.set(10);
         assertTrue(b.toString().equals("foo"));
     }
+
+    @Test
+    public void propagates() {
+        final Cell<Integer> a = new Cell<Integer>(P.p(5));
+        final Cell<Integer> b = new Cell<Integer>(new P1<Integer>() {
+            @Override
+            public Integer _1() {
+                return a.get() * 2;
+            }
+        });
+        final StringBuilder c = new StringBuilder();
+        b.whenChanged(new Effect<Integer>() {
+            @Override
+            public void e(Integer value) {
+                c.append(value);
+            }
+        });
+        a.set(12);
+        assertTrue(c.toString().equals("24"));
+    }
 }
