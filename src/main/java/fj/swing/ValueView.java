@@ -1,11 +1,13 @@
 package fj.swing;
 
+import fj.Effect;
 import fj.F;
+
 import java.util.List;
 
 public abstract class ValueView<B> {
     public abstract B get();
-    public abstract void addListener(Listener<B> listener);
+    public abstract void addListener(Effect<B> listener);
 
     public final <C> ValueView<C> map(final F<B, C> f) {
         return new ValueView<C>() {
@@ -15,11 +17,11 @@ public abstract class ValueView<B> {
             }
 
             @Override
-            public void addListener(final Listener<C> cListener) {
-                ValueView.this.addListener(new Listener<B>() {
+            public void addListener(final Effect<C> cListener) {
+                ValueView.this.addListener(new Effect<B>() {
                     @Override
-                    public void act(B b) {
-                        cListener.act(f.f(b));
+                    public void e(B b) {
+                        cListener.e(f.f(b));
                     }
                 });
             }
@@ -38,12 +40,12 @@ public abstract class ValueView<B> {
             }
 
             @Override
-            public void addListener(final Listener<Boolean> booleanListener) {
+            public void addListener(final Effect<Boolean> booleanListener) {
                 for (ValueView<Boolean> valueView: valueViews)
-                    valueView.addListener(new Listener<Boolean>() {
+                    valueView.addListener(new Effect<Boolean>() {
                         @Override
-                        public void act(Boolean aBoolean) {
-                            booleanListener.act(get());
+                        public void e(Boolean aBoolean) {
+                            booleanListener.e(get());
                         }
                     });
             }

@@ -2,11 +2,11 @@ package fj.swing;
 
 import fj.F;
 import fj.F2;
-import javax.swing.JTextField;
 import org.junit.Before;
 import org.junit.Test;
 
-import static fj.swing.TextFieldW.textField;
+import javax.swing.JTextField;
+
 import static org.junit.Assert.assertEquals;
 
 public final class TextFieldTest {
@@ -16,7 +16,8 @@ public final class TextFieldTest {
     @Before
     public void setUp() {
         value = new Value<String>("foo");
-        field = textField(new JTextField()).bind(value).unwrap();
+        field = new JTextField();
+        TextFieldW.bind(field, value);
     }
 
     @Test
@@ -60,7 +61,8 @@ public final class TextFieldTest {
                 return new StringBuilder(s).reverse().toString();
             }
         });
-        JTextField textField = textField(new JTextField()).bind(reverse).unwrap();
+        JTextField textField = new JTextField();
+        TextFieldW.bind(textField, reverse);
         value.set("spam");
         assertEquals("The textfield should contain the text 'maps'.", "maps", textField.getText());
     }
@@ -69,7 +71,7 @@ public final class TextFieldTest {
     public void mapping() {
         value.set("5");
 
-        ValueView<Integer> intView = textField(field).map(new F<String, Integer>() {
+        ValueView<Integer> intView = TextFieldW.map(field, new F<String, Integer>() {
             @Override
             public Integer f(String s) {
                 return Integer.parseInt(s);

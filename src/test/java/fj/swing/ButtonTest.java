@@ -1,11 +1,13 @@
 package fj.swing;
 
 import fj.F;
-import javax.swing.JButton;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import javax.swing.JButton;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ButtonTest {
     private Value<String> value;
@@ -14,12 +16,13 @@ public class ButtonTest {
     @Before
     public void setUp() {
         value = new Value<String>("foo");
-        button = ButtonW.button(new JButton()).bind(ButtonW.visibility, value.map(new F<String, Boolean>() {
+        button = new JButton();
+        ButtonW.bind(button, ButtonW.visibility, value.map(new F<String, Boolean>() {
             @Override
             public Boolean f(String s) {
                 return s.equals("bar");
             }
-        })).unwrap();
+        }));
     }
 
     @Test
@@ -33,10 +36,5 @@ public class ButtonTest {
     @Test
     public void initialState() {
         assertFalse("The button should not be visible", button.isVisible());
-    }
-
-    @Test
-    public void convenienceMethod() {
-        assertEquals("The generated button should have foo as its text", "foo", ButtonW.button("foo").unwrap().getText());
     }
 }

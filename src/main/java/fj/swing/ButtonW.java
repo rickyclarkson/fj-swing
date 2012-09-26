@@ -2,47 +2,30 @@ package fj.swing;
 
 import fj.Effect;
 import fj.F;
-import javax.swing.JButton;
+
+import java.awt.Component;
 
 public class ButtonW {
-    private final JButton wrapped;
-    public static final F<ButtonW, Effect<Boolean>> visibility = new F<ButtonW, Effect<Boolean>>() {
+    public static final F<Component, Effect<Boolean>> visibility = new F<Component, Effect<Boolean>>() {
         @Override
-        public Effect<Boolean> f(final ButtonW buttonW) {
+        public fj.Effect<Boolean> f(final Component component) {
             return new Effect<Boolean>() {
                 @Override
                 public void e(Boolean b) {
-                    buttonW.wrapped.setVisible(b);
+                    component.setVisible(b);
                 }
             };
         }
     };
-    public static ButtonW button(JButton wrapped) {
-        return new ButtonW(wrapped);
-    }
 
-    private ButtonW(JButton wrapped) {
-        this.wrapped = wrapped;
-    }
+    public static <A, C extends Component> void bind(final C component, final F<? super C, Effect<A>> effect, ValueView<A> view) {
+        effect.f(component).e(view.get());
 
-    public <A> ButtonW bind(final F<ButtonW, Effect<A>> effect, ValueView<A> view) {
-        effect.f(this).e(view.get());
-
-        view.addListener(new Listener<A>() {
+        view.addListener(new Effect<A>() {
             @Override
-            public void act(A a) {
-                effect.f(ButtonW.this).e(a);
+            public void e(A a) {
+                effect.f(component).e(a);
             }
         });
-
-        return this;
-    }
-
-    public JButton unwrap() {
-        return wrapped;
-    }
-
-    public static ButtonW button(String text) {
-        return button(new JButton(text));
     }
 }

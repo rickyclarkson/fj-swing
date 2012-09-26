@@ -1,13 +1,17 @@
 package fj.swing;
 
 import fj.F;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.*;
 
-import static fj.swing.TextAreaW.textArea;
-import static fj.swing.TextAreaW.visibility;
 import static fj.swing.ValueView.all;
 
 public class Example3 {
@@ -33,7 +37,7 @@ public class Example3 {
             final Question question = new Question();
             questionPanel.add(new JLabel(question.toString()));
             JTextField field = new JTextField();
-            ValueView<Boolean> c = TextFieldW.textField(field).map(new F<String, Boolean>() {
+            ValueView<Boolean> c = TextFieldW.map(field, new F<String, Boolean>() {
                 @Override
                 public Boolean f(String s) {
                     return question.getAnswer().equals(s);
@@ -44,7 +48,8 @@ public class Example3 {
         }
 
         frame.getContentPane().add(questionPanel);
-        JTextArea email = textArea("Now you have proved you're not drunk,\nyou can send emails.").bind(visibility, all(correct)).unwrap();
+        JTextArea email = new JTextArea("Now you have proved you're not drunk,\nyou can send emails.");
+        ButtonW.bind(email, ButtonW.visibility, all(correct));
         frame.getContentPane().add(email);
     }
 

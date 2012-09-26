@@ -1,14 +1,14 @@
 package fj.swing;
 
 import fj.F;
-import java.awt.GridLayout;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import java.awt.GridLayout;
 
-import static fj.swing.ButtonW.button;
 import static fj.swing.ButtonW.visibility;
-import static fj.swing.TextFieldW.textField;
 
 public final class Example1 {
     public static void main(String[] args) {
@@ -24,8 +24,11 @@ public final class Example1 {
 
     Example1() {
         frame.getContentPane().setLayout(new GridLayout());
+
         final Value<String> text = new Value<String>("Enter a number");
-        frame.getContentPane().add(textField(new JTextField(20)).bind(text).unwrap());
+        JTextField enterANumber = new JTextField("Enter a number");
+        TextFieldW.bind(enterANumber, text);
+        frame.getContentPane().add(enterANumber);
         final ValueView<Boolean> isANumber = text.map(new F<String, Boolean>() {
             @Override
             public Boolean f(String s) {
@@ -37,7 +40,9 @@ public final class Example1 {
                 }
             }
         });
-        frame.getContentPane().add(button("Well done").bind(visibility, isANumber).unwrap());
+        JButton button = new JButton("Well done");
+        ButtonW.bind(button, visibility, isANumber);
+        frame.getContentPane().add(button);
     }
 
     void start() {

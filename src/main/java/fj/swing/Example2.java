@@ -3,12 +3,11 @@ package fj.swing;
 import fj.F;
 import fj.F2;
 import fj.data.Option;
-import java.awt.GridLayout;
+
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-
-import static fj.swing.TextFieldW.textField;
+import java.awt.GridLayout;
 
 public class Example2 {
     public static void main(String[] args) {
@@ -49,9 +48,18 @@ public class Example2 {
                 }
             }
         };
-        frame.getContentPane().add(textField(new JTextField()).bind(firstNumber.map(intToString, stringToInt, "3")).unwrap());
-        frame.getContentPane().add(textField(new JTextField()).bind(secondNumber.map(intToString, stringToInt, "4")).unwrap());
-        frame.getContentPane().add(textField(new JTextField()).bind(sum.map(intToString)).unwrap());
+
+        JTextField firstNumberField = new JTextField();
+        TextFieldW.bind(firstNumberField, firstNumber.map(intToString, stringToInt, "3"));
+        frame.getContentPane().add(firstNumberField);
+
+        JTextField secondNumberField = new JTextField();
+        TextFieldW.bind(secondNumberField, secondNumber.map(intToString, stringToInt, "4"));
+        frame.getContentPane().add(secondNumberField);
+
+        JTextField sumField = new JTextField();
+        TextFieldW.bind(sumField, sum.map(intToString));
+        frame.getContentPane().add(sumField);
     }
 
     public void start() {

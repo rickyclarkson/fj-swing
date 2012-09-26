@@ -1,14 +1,16 @@
 package fj.swing;
 
+import fj.Effect;
 import fj.F;
 import fj.F2;
 import fj.data.Option;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public final class Value<A> {
     private A a;
-    private final List<Listener<A>> listeners = new ArrayList<Listener<A>>();
+    private final List<Effect<A>> listeners = new ArrayList<Effect<A>>();
 
     public Value(A a) {
         this.a = a;
@@ -20,11 +22,11 @@ public final class Value<A> {
 
     public void set(A a) {
         this.a = a;
-        for (Listener<A> listener: listeners)
-            listener.act(a);
+        for (Effect<A> listener: listeners)
+            listener.e(a);
     }
 
-    public void addListener(Listener<A> listener) {
+    public void addListener(Effect<A> listener) {
         listeners.add(listener);
     }
 
@@ -36,11 +38,11 @@ public final class Value<A> {
             }
 
             @Override
-            public void addListener(final Listener<B> listener) {
-                listeners.add(new Listener<A>() {
+            public void addListener(final Effect<B> listener) {
+                listeners.add(new Effect<A>() {
                     @Override
-                    public void act(A a) {
-                        listener.act(f.f(a));
+                    public void e(A a) {
+                        listener.e(f.f(a));
                     }
                 });
             }
@@ -51,9 +53,9 @@ public final class Value<A> {
         final Value<B> result = new Value<B>(defaultValue);
         final boolean[] recursionGuard = {false};
 
-        addListener(new Listener<A>() {
+        addListener(new Effect<A>() {
             @Override
-            public void act(A a) {
+            public void e(A a) {
                 if (!recursionGuard[0]) {
                     recursionGuard[0] = true;
                     try {
@@ -64,9 +66,9 @@ public final class Value<A> {
                 }
             }
         });
-        result.addListener(new Listener<B>() {
+        result.addListener(new Effect<B>() {
             @Override
-            public void act(B b) {
+            public void e(B b) {
                 if (!recursionGuard[0]) {
                     recursionGuard[0] = true;
                     try {
@@ -89,18 +91,18 @@ public final class Value<A> {
             }
 
             @Override
-            public void addListener(final Listener<C> cListener) {
-                Value.this.addListener(new Listener<A>() {
+            public void addListener(final Effect<C> cListener) {
+                Value.this.addListener(new Effect<A>() {
                     @Override
-                    public void act(A a) {
-                        cListener.act(f2.f(a, other.get()));
+                    public void e(A a) {
+                        cListener.e(f2.f(a, other.get()));
                     }
                 });
 
-                other.addListener(new Listener<B>() {
+                other.addListener(new Effect<B>() {
                     @Override
-                    public void act(B b) {
-                        cListener.act(f2.f(Value.this.get(), b));
+                    public void e(B b) {
+                        cListener.e(f2.f(Value.this.get(), b));
                     }
                 });
             }
